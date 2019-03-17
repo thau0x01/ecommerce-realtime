@@ -14,6 +14,7 @@ class PasswordResetSchema extends Schema {
         .unique()
 
       table.dateTime('expires_at')
+
       table.timestamps()
 
       table
