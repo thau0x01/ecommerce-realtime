@@ -26,6 +26,10 @@
     "@adonisjs/ignitor": "^2.0.8",
     "@adonisjs/lucid": "^6.1.3",
     "@adonisjs/mail": "^3.0.9",
+    "@adonisjs/validator": "^5.0.6",
+    "@adonisjs/websocket": "^1.0.11",
+    "adonis-acl": "^1.1.1",
+    "adonis-bumblebee": "^1.5.3",
     "mysql": "^2.16.0"
   },
   "devDependencies": {},
