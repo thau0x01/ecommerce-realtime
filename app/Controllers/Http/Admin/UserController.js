@@ -42,7 +42,7 @@ class UserController {
     try {
       const userData = request.only([
         'name',
-        'username',
+        'surname',
         'email',
         'password',
         'image_id'
