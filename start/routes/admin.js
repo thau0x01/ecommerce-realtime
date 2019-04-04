@@ -42,7 +42,12 @@ Route.group(() => {
   /**
    * User Resource Routes
    */
-  Route.resource('users', 'UserController').apiOnly()
+  Route.resource('users', 'UserController')
+    .apiOnly()
+    .validator([
+      [['users.store'], ['Admin/StoreUser']],
+      [['users.update'], ['Admin/StoreUser']]
+    ])
 })
   .prefix('v1/admin')
   .namespace('Admin')
