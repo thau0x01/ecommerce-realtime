@@ -200,7 +200,7 @@ module.exports = {
     console: {
       driver: 'console',
       name: 'adonis-app',
-      level: 'error'
+      level: 'info'
     },
 
     /*
@@ -218,7 +218,7 @@ module.exports = {
       driver: 'file',
       name: 'ecommerce-realtime',
       filename: 'ecommerce-error.log',
-      level: 'info'
+      level: 'error'
     }
   },
 
