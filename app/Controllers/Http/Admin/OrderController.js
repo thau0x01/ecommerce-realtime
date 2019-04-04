@@ -22,20 +22,19 @@ class OrderController {
    * @param {Response} ctx.response
    * @param { object } ctx.paginate
    */
-  async index({ request, response, paginate }) {
+  async index({ request, response, pagination }) {
     const { status, id } = request.only(['status', 'id '])
     const query = Order.query()
 
     if (status && id) {
-      query.where('status', status)
-      query.orWhere('id', 'LIKE', `%${id}%`)
+      query.where('status', status).orWhere('id', 'LIKE', `%${id}%`)
     } else if (status) {
       query.where('status', status)
     } else if (id) {
       query.where('id', 'LIKE', `%${id}%`)
     }
 
-    const orders = query.paginate(paginate.page, paginate.limit)
+    const orders = await query.paginate(pagination.page, pagination.limit)
     return response.send(orders)
   }
 
