@@ -35,6 +35,22 @@ class OrderTransformer extends TransformerAbstract {
         order.__meta__ && order.__meta__.subtotal ? order.__meta__.subtotal : 0
     }
   }
+
+  includeUser(order) {
+    return this.item(order.getRelated('user'), UserTransformer)
+  }
+
+  includeItems(order) {
+    return this.item(order.getRelated('items'), OrderItemTransformer)
+  }
+
+  includeCoupons(order) {
+    return this.item(order.getRelated('coupons'), CouponTransformer)
+  }
+
+  includeDiscounts(order) {
+    return this.item(order.getRelated('discounts'), DiscountTransformer)
+  }
 }
 
 module.exports = OrderTransformer
