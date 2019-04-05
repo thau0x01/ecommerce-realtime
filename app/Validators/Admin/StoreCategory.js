@@ -5,7 +5,7 @@ class AdminStoreCategory {
     return {
       // validation rules
       title: 'required',
-      description: 'description'
+      description: 'required'
     }
   }
 }
