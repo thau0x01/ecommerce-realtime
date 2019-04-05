@@ -5,7 +5,7 @@ module.exports = {
    * When enabled, Bulblebee will automatically parse the ?include=
    * parameter and include all requested resources
    */
-  parseRequest: false,
+  parseRequest: true,
 
   /*
    * Nested includes will be resolved up to this limit
