@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Order = use('App/Models/Order')
+const Transformer = use('App/Transformers/Admin/OrderTransformer')
 /**
  * Resourceful controller for interacting with orders
  */
@@ -17,19 +19,21 @@ class OrderController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
+  async index({ request, response, transform, pagination }) {
+    // order number
+    const number = request.input('number')
+    const query = Order.query()
+    if (number) {
+      query.where('id', 'LIKE', `${number}`)
+    }
 
-  /**
-   * Render a form to be used for creating a new order.
-   * GET orders/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    const results = await query
+      .orderBy('id', 'DESC')
+      .paginate(pagination.page, pagination.limit)
+
+    const orders = await transform.paginate(results, Transformer)
+
+    return response.send(orders)
   }
 
   /**
@@ -40,8 +44,7 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
-  }
+  async store({ request, response }) {}
 
   /**
    * Display a single order.
@@ -52,19 +55,10 @@ class OrderController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
-
-  /**
-   * Render a form to update an existing order.
-   * GET orders/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+  async show({ params: { id }, request, response, transform }) {
+    const result = await Order.findOrFail(id)
+    const order = await transform.item(result, Transformer)
+    return response.send(order)
   }
 
   /**
@@ -75,8 +69,7 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
-  }
+  async update({ params, request, response }) {}
 
   /**
    * Delete a order with id.
@@ -86,8 +79,7 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
-  }
+  async destroy({ params, request, response }) {}
 }
 
 module.exports = OrderController
