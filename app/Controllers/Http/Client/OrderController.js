@@ -9,6 +9,9 @@ const Transformer = use('App/Transformers/Admin/OrderTransformer')
 const Database = use('Database')
 const Service = use('App/Services/Order/OrderService')
 const Ws = use('Ws')
+const Coupon = use('App/Models/Coupon')
+const Discount = use('App/Models/Discount')
+
 /**
  * Resourceful controller for interacting with orders
  */
@@ -130,6 +133,54 @@ class OrderController {
         message: 'Não foi possível atualizar o seu pedido!'
       })
     }
+  }
+
+  async applyDiscount({ params: { id }, request, response, transform, auth }) {
+    const { code } = request.all()
+    const coupon = await Coupon.findByOrFail('code', code.toUpperCase())
+    const client = await auth.getUser()
+    var order = await Order.query()
+      .where('user_id', client.id)
+      .where('id', id)
+      .firstOrFail()
+
+    var discount,
+      info = {}
+    try {
+      const service = new Service(order)
+      const canAddDiscount = await service.canApplyDiscount(coupon)
+      const orderDiscounts = await order.coupons().getCount()
+
+      const canApplyToOrder =
+        orderDiscounts < 1 || (orderDiscounts >= 1 && coupon.recursive)
+      if (canAddDiscount && canApplyToOrder) {
+        discount = await Discount.findOrCreate({
+          order_id: order.id,
+          coupon_id: coupon.id
+        })
+
+        info.message = 'Cupom aplicado com sucesso!'
+        info.success = true
+      } else {
+        info.message = 'Não foi possível aplicar o cupom!'
+        info.success = false
+      }
+      order = await transform
+        .include('coupons,items,discounts')
+        .item(order, Transformer)
+      return response.send({ order, info })
+    } catch (error) {
+      return response.status(400).send({
+        message: 'Erro desconhecido!'
+      })
+    }
+  }
+
+  async removeDiscount({ request, response }) {
+    const { discount_id } = request.all()
+    const discount = await Discount.findOrFail(discount_id)
+    await discount.delete()
+    return response.status(204).send()
   }
 }
 
