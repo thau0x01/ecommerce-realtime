@@ -30,7 +30,7 @@
     "@adonisjs/websocket": "^1.0.11",
     "adonis-acl": "^1.1.1",
     "adonis-bumblebee": "^1.5.3",
-    "mysql": "^2.16.0"
+    "mysql": "^2.17.1"
   },
   "devDependencies": {},
   "autoload": {
