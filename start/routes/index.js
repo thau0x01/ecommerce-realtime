@@ -16,6 +16,23 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
-})
+/**
+ * Retorna o usuário logado atualmente
+ */
+Route.get('v1/me', 'UserController.me')
+  .as('me')
+  .middleware('auth')
+/**
+ * Importa as rotas de autenticação
+ */
+require('./auth')
+
+/**
+ * Importa as rotas de Admin
+ */
+require('./admin')
+
+/**
+ * Importa as rotas de Clientes
+ */
+require('./client')

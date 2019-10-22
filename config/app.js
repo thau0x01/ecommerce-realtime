@@ -218,7 +218,7 @@ module.exports = {
       driver: 'file',
       name: 'ecommerce-realtime',
       filename: 'ecommerce-error.log',
-      level: 'info'
+      level: 'error'
     }
   },
 
